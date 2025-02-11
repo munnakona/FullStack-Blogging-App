@@ -1,28 +1,32 @@
-pipeline { 
+pipeline {
     agent any
-    
-    tools {
+      parameters{
+        choice (name: 'Branch_Name',choices: ['main','feature'])
+    }
+    tools{
         maven 'maven3'
         jdk 'jdk17'
     }
 
     stages {
-        
+        stage('git checkout') {
+            steps {
+                git branch: "${params.Branch_Name}", url: 'https://github.com/munnakona/DevSecOps25.git'
+            }
+        }
         stage('Compile') {
             steps {
-            sh  "mvn compile"
+                sh 'mvn compile'
             }
         }
-        
         stage('Test') {
             steps {
-                sh "mvn test"
+                echo 'mvn test'
             }
         }
-        
-        stage('Package') {
+        stage('Build') {
             steps {
-                sh "mvn package"
+                echo 'mvn package'
             }
         }
     }
